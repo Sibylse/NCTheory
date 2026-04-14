@@ -33,10 +33,10 @@ class Optimizer:
         #  criterion.classifier.update_centroids(embedding, criterion.Y)
         #  net.train()
         n_b = targets.shape[0]
-        M, v, residuals = compute_centers(net)
+        M, v, residuals = self.compute_centers(net)
         M = torch.from_numpy(M.T).float()
         X = net.embed(inputs)
-        t1_, t2_, t3_, t4_ = custom_mu_loss_terms(X, targets, P, M)
+        t1_, t2_, t3_, t4_ = self.custom_mu_loss_terms(X, targets, P, M)
         t1+= t1_*n_b
         t2+= t2_*n_b
         t3+= t3_*n_b
@@ -68,7 +68,7 @@ class Optimizer:
     print('Loss: %.6f | Acc: %.3f%% (%d/%d) | Conf %.2f'% (test_loss/max(len(data_loader),1), 100.*correct/total, correct, total, 100*conf/total))
     return (100.*correct/total, 100*conf/total)
 
-  def custom_mu_loss_terms(X, y, P, M, eps=1e-14):
+  def custom_mu_loss_terms(self, X, y, P, M, eps=1e-14):
     n, d = X.shape
     M_y = M[:, y].T #bxd
     p_y = P.gather(1, y[:, None]).squeeze(1)
@@ -88,13 +88,13 @@ class Optimizer:
 
     return term1.mean(), term2.mean(), term3.mean(), term4.mean()
 
-  def compute_centers(net):
+  def compute_centers(self, net):
     W = net.classifier.weight.detach().numpy()
     W = W - np.outer(np.ones(W.shape[0]),np.mean(W,0))
     b = net.classifier.bias.detach().numpy()
-    return compute_centers_np(W,b)
+    return self.compute_centers_np(W,b)
 
-  def compute_centers_np(W,b):
+  def compute_centers_np(self, W,b):
     c=W.shape[0]
     v, residuals, rank, s = np.linalg.lstsq(np.vstack([W.T,np.ones(c)]).T,-b-0.5*np.sum(W**2,1),rcond=1e-3)  
     C = W+np.outer(np.ones(c),v[:-1])
