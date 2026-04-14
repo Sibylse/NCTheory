@@ -86,7 +86,7 @@ class Optimizer:
     P_safe = P.clamp_min(eps)
     term4 = -(P_safe * P_safe.log()).sum(dim=1)  
 
-    return term1.mean(), term2.mean(), term3.mean(), term4.mean()
+    return term1.mean().item(), term2.mean().item(), term3.mean().item(), term4.mean().item()
 
   def compute_centers(self, net):
     W = net.classifier.weight.detach().numpy()
