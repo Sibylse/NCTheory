@@ -42,7 +42,7 @@ class Optimizer:
         t3+= t3_*n_b
         t4+= t4_*n_b
         train_loss += loss.item()*n_b
-        confBatch, predicted = Y_pred.max(1)
+        confBatch, predicted = P.max(1)
         correct += predicted.eq(targets).sum().item()
         conf+=confBatch.sum().item()
     execution_time = (time.time() - start_time)
