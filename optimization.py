@@ -46,9 +46,9 @@ class Optimizer:
         correct += predicted.eq(targets).sum().item()
         conf+=confBatch.sum().item()
     execution_time = (time.time() - start_time)
-    print('Loss: %.6f | Acc: %.3f%% (%d/%d) | Conf %.2f | time (s): %.2f'% (train_loss/len(self.n), 100.*correct/self.n, correct, self.n, 100*conf/self.n, execution_time))
-    print('||x-mu_y||^2: %.6f | -||x-p^T M||^2: %.6f | -p_kp_l||mu_k-mu_l||^2: %.6f | H(p): %.6f'% (t1/len(self.n), t2/self.n, t3/self.n, t4/self.n))
-    return (train_loss/len(self.n),100.*correct/self.n, 100*conf/self.n)
+    print('Loss: %.6f | Acc: %.3f%% (%d/%d) | Conf %.2f | time (s): %.2f'% (train_loss/self.n, 100.*correct/self.n, correct, self.n, 100*conf/self.n, execution_time))
+    print('||x-mu_y||^2: %.6f | -||x-p^T M||^2: %.6f | -p_kp_l||mu_k-mu_l||^2: %.6f | H(p): %.6f'% (t1/self.n, t2/self.n, t3/self.n, t4/self.n))
+    return (train_loss/self.n,100.*correct/self.n, 100*conf/self.n)
   
   def test_acc(self, net, criterion, data_loader, min_conf=0):
     net.eval()
